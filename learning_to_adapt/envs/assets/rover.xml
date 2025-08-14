@@ -1,0 +1,70 @@
+<mujoco>
+    <compiler autolimits="true" />
+    <option gravity="0 0 -9.81" />
+
+    <asset>
+        <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3"
+            rgb2=".2 .3 .4" />
+        <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2" />
+    </asset>
+
+    <default>
+        <joint damping=".03" actuatorfrcrange="-0.5 0.5" />
+        <default class="wheel">
+            <geom type="cylinder" size=".03 .01" rgba=".5 .5 1 1" friction="1 0.2 0.01"  />
+        </default>
+        <default class="decor">
+            <site type="box" rgba=".5 1 .5 1" />
+        </default>
+    </default>
+
+    <worldbody>
+        <geom type="plane" size="3 3 .01" material="grid" />
+
+
+        <body name="rover" pos="0 0 .03">
+            <geom type="box" size="0.02 0.03 0.01" pos="0.08 0 0.03" rgba="0.8 0.8 0.8 1"/>
+            <freejoint />
+            <light name="top light" pos="0 0 2" mode="trackcom" diffuse=".4 .4 .4" />
+            <light name="front light" pos=".1 0 .02" dir="2 0 -1" diffuse="1 1 1" />
+            <geom name="chassis" type="box" size="0.10 0.05 0.02" />
+
+            <body name="wheel_fl" pos=".07 .06 0" zaxis="0 1 0">
+                <joint name="wheel_fl_joint"/>
+                <geom class="wheel" />
+                <site class="decor" size=".006 .025 .012" />
+                <site class="decor" size=".025 .006 .012" />
+            </body>
+
+
+            <body name="wheel_fr" pos=".07 -.06 0" zaxis="0 1 0">
+                <joint name="wheel_fr_joint"/>
+                <geom class="wheel" />
+                <site class="decor" size=".006 .025 .012" />
+                <site class="decor" size=".025 .006 .012" />
+            </body>
+
+            <body name="wheel_rl" pos="-.07 .06 0" zaxis="0 1 0">
+                <joint name="wheel_rl_joint"/>
+                <geom class="wheel" />
+                <site class="decor" size=".006 .025 .012" />
+                <site class="decor" size=".025 .006 .012" />
+            </body>
+
+            <body name="wheel_rr" pos="-.07 -.06 0" zaxis="0 1 0">
+                <joint name="wheel_rr_joint"/>
+                <geom class="wheel" />
+                <site class="decor" size=".006 .025 .012" />
+                <site class="decor" size=".025 .006 .012" />
+            </body>
+        </body>
+    </worldbody>
+
+  <actuator>
+    <motor joint="wheel_fl_joint" ctrlrange="-1 1"/>
+    <motor joint="wheel_fr_joint" ctrlrange="-1 1"/>
+    <motor joint="wheel_rl_joint" ctrlrange="-1 1"/>
+    <motor joint="wheel_rr_joint" ctrlrange="-1 1"/>
+  </actuator>
+
+</mujoco>
