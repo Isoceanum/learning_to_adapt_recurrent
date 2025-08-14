@@ -3,34 +3,30 @@ from learning_to_adapt.envs import RoverEnv
 import numpy as np
 
 def main():
-    # Create normalized Rover environment (same style as working script)
+    # Create normalized rover environment (matches training setup)
     env = normalize(RoverEnv(reset_every_episode=True, task=None))
-
+    
+    # Handle sim attribute regardless of whether env is wrapped
+    sim = env.wrapped_env.sim if hasattr(env, "wrapped_env") else env.sim
+    
     obs = env.reset()
-    sim = env.wrapped_env.sim  # Access MuJoCo sim inside wrapped env
-    xpos_before = sim.data.qpos[0]  # x position before action
-
     print("Initial observation:", obs)
-
+    
+    prev_x = sim.data.qpos[0]
+    
     for step in range(10):
-        action = env.action_space.sample()  # random action
+        action = np.random.uniform(-1, 1, size=env.action_space.shape)
         obs, reward, done, _ = env.step(action)
-
-        xpos_after = sim.data.qpos[0]
-        delta_x = xpos_after - xpos_before
-        xpos_before = xpos_after
-
-        print(f"Step {step+1}:")
-        print(f"  Action: {np.round(action, 3)}")
-        print(f"  Δx: {delta_x:.4f}")
-        print(f"  Reward: {reward:.4f}")
-        print(f"  Done: {done}")
-        print("-" * 40)
-
+        
+        new_x = sim.data.qpos[0]
+        delta_x = new_x - prev_x
+        prev_x = new_x
+        
+        print(f"Step {step}: Action={action}, Δx={delta_x:.4f}, Reward={reward:.4f}")
+        
         if done:
-            print("Episode ended early, resetting environment...")
-            obs = env.reset()
-            xpos_before = sim.data.qpos[0]
+            print("Episode finished early.")
+            break
 
 if __name__ == "__main__":
     main()
