@@ -15,7 +15,7 @@ from learning_to_adapt.logger import logger
 class RoverEnv(MujocoEnv, Serializable):
     pass
 
-    def __init__(self):
+    def __init__(self, reset_every_episode=False):
         Serializable.quick_init(self, locals())
         # Path to the MuJoCo XML model for the rover
         xml_path = os.path.join(
@@ -28,6 +28,8 @@ class RoverEnv(MujocoEnv, Serializable):
         MujocoEnv.__init__(self, xml_path)
         # Simulation timestep (seconds per control step)
         self.dt = self.model.opt.timestep
+        self.reset_every_episode = reset_every_episode
+        self.first = True
     
          
         
@@ -103,7 +105,6 @@ class RoverEnv(MujocoEnv, Serializable):
         return reward
     
     
-    
     def reset_model(self):
         """
         Reset the rover to its initial position/velocity with small random noise.
@@ -117,6 +118,18 @@ class RoverEnv(MujocoEnv, Serializable):
 
         # Return initial observation
         return self.get_current_obs()
+    
+    
+    def reset_mujoco(self, init_state=None):
+        super(RoverEnv, self).reset_mujoco(init_state=init_state)
+        if self.reset_every_episode and not self.first:
+            self.reset_task()
+        if self.first:
+            self.first = False
+            
+            
+    def reset_task(self, value=None):
+        pass
 
 
     def log_diagnostics(self, paths, prefix=''):
