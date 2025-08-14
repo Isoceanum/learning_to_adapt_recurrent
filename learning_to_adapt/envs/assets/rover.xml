@@ -21,28 +21,28 @@
             <geom name="chassis" type="box" size="0.10 0.05 0.02" />
 
             <body name="wheel_fl" pos=".07 .06 0" zaxis="0 1 0">
-                <joint name="wheel_fl_joint"/>
+                <joint name="wheel_fl_joint" type="hinge" axis="0 0 1" limited="false"/>
                 <geom type="cylinder" size=".03 .01" rgba=".5 .5 1 1" friction="1 0.2 0.01" />
                 <site type="box" rgba=".5 1 .5 1" size=".006 .025 .012" />
                 <site type="box" rgba=".5 1 .5 1" size=".025 .006 .012" />
             </body>
 
             <body name="wheel_fr" pos=".07 -.06 0" zaxis="0 1 0">
-                <joint name="wheel_fr_joint"/>
+                <joint name="wheel_fr_joint" type="hinge" axis="0 0 1" limited="false"/>
                 <geom type="cylinder" size=".03 .01" rgba=".5 .5 1 1" friction="1 0.2 0.01" />
                 <site type="box" rgba=".5 1 .5 1" size=".006 .025 .012" />
                 <site type="box" rgba=".5 1 .5 1" size=".025 .006 .012" />
             </body>
 
             <body name="wheel_rl" pos="-.07 .06 0" zaxis="0 1 0">
-                <joint name="wheel_rl_joint"/>
+                <joint name="wheel_rl_joint" type="hinge" axis="0 0 1" limited="false"/>
                 <geom type="cylinder" size=".03 .01" rgba=".5 .5 1 1" friction="1 0.2 0.01" />
                 <site type="box" rgba=".5 1 .5 1" size=".006 .025 .012" />
                 <site type="box" rgba=".5 1 .5 1" size=".025 .006 .012" />
             </body>
 
             <body name="wheel_rr" pos="-.07 -.06 0" zaxis="0 1 0">
-                <joint name="wheel_rr_joint"/>
+                <joint name="wheel_rr_joint" type="hinge" axis="0 0 1" limited="false"/>
                 <geom type="cylinder" size=".03 .01" rgba=".5 .5 1 1" friction="1 0.2 0.01" />
                 <site type="box" rgba=".5 1 .5 1" size=".006 .025 .012" />
                 <site type="box" rgba=".5 1 .5 1" size=".025 .006 .012" />
