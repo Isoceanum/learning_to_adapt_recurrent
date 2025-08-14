@@ -2,12 +2,19 @@ from learning_to_adapt.envs.normalized_env import normalize
 from learning_to_adapt.envs import RoverEnv
 import numpy as np
 
+def unwrap_env(env):
+    """Recursively unwrap to get to the base env with .sim."""
+    current_env = env
+    while hasattr(current_env, 'env'):
+        current_env = current_env.env
+    return current_env
+
 def main():
-    # Create normalized rover environment (matches training setup)
     env = normalize(RoverEnv(reset_every_episode=True, task=None))
     
-    # Handle sim attribute regardless of whether env is wrapped
-    sim = env.wrapped_env.sim if hasattr(env, "wrapped_env") else env.sim
+    # Unwrap to base MuJoCo env to access sim
+    base_env = unwrap_env(env)
+    sim = base_env.sim
     
     obs = env.reset()
     print("Initial observation:", obs)
