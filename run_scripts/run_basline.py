@@ -74,32 +74,32 @@ if __name__ == '__main__':
             'task': None,
 
             # Policy
-            'n_candidates': 2000,
-            'horizon': 30, # Rover is slower; needs longer horizon
+            'n_candidates': 200,
+            'horizon': 10, # Rover is slower; needs longer horizon
             'use_cem': False,
-            'num_cem_iters': 5,
+            'num_cem_iters': 2,
             'discount': 1.,
 
             # Sampling
-            'max_path_length': 200,# Let it travel further per episode
-            'num_rollouts': 10,
+            'max_path_length': 50,# Let it travel further per episode
+            'num_rollouts': 2,
             'initial_random_samples': True,
 
             # Training
-            'n_itr': 50,
+            'n_itr': 2,
             'learning_rate': 1e-3,
-            'batch_size': 128,
+            'batch_size': 64,
             'dynamic_model_epochs': 100,
             'valid_split_ratio': 0.1,
             'rolling_average_persitency': 0.99,
 
             # Dynamics Model
-            'hidden_sizes': (512, 512),
+            'hidden_sizes': (128, 128),
             'hidden_nonlinearity': 'relu',
 
 
             #  Other
-            'n_parallel': 2,
+            'n_parallel': 1,
             }
 
     run_experiment(config)
