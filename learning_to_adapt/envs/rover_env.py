@@ -13,25 +13,31 @@ from learning_to_adapt.logger import logger
 # MujocoEnv handles loading of xml models, resetting the simulation, and setting up action/observation spaces
 # Serializable makes  environment state and constructor parameters pickle-able
 class RoverEnv(MujocoEnv, Serializable):
-    pass
 
     def __init__(self, task=None, reset_every_episode=False):
-        # Simulation timestep (seconds per control step)
-        self.dt = self.model.opt.timestep
+        # Makes the class serializable for logging / saving
+        Serializable.quick_init(self, locals())
+
+        # Store task type (can be used later for perturbations)
         self.task = None if task == 'None' else task
+
+        # Flags for episodic resets and first-time init
         self.reset_every_episode = reset_every_episode
         self.first = True
-        
-        Serializable.quick_init(self, locals())
-        # Path to the MuJoCo XML model for the rover
+
+        # Path to rover XML model
         xml_path = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
             "assets",
             "rover.xml"
         )
-        # Initialize the MuJoCo environment
+
+        # Initialize the MuJoCo environment (loads XML & sets up self.model)
         MujocoEnv.__init__(self, xml_path)
-    
+
+        # Simulation timestep (seconds per control step)
+        self.dt = self.model.opt.timestep
+        
          
         
     def get_current_obs(self):
