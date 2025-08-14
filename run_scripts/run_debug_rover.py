@@ -1,43 +1,36 @@
-import numpy as np
-from learning_to_adapt.envs import rover_env
 from learning_to_adapt.envs.normalized_env import normalize
+from learning_to_adapt.envs import RoverEnv
+import numpy as np
 
 def main():
-    # Create RoverEnv in same style as run_baseline.py
-    env = normalize(rover_env.RoverEnv(reset_every_episode=True))
+    # Create normalized Rover environment (same style as working script)
+    env = normalize(RoverEnv(reset_every_episode=True, task=None))
 
     obs = env.reset()
+    sim = env.wrapped_env.sim  # Access MuJoCo sim inside wrapped env
+    xpos_before = sim.data.qpos[0]  # x position before action
+
     print("Initial observation:", obs)
 
     for step in range(10):
-        # Random actions for 4 wheels in [-1, 1]
-        action = np.random.uniform(low=-1, high=1, size=env.action_space.shape)
+        action = env.action_space.sample()  # random action
+        obs, reward, done, _ = env.step(action)
 
-        obs, reward, done, info = env.step(action)
+        xpos_after = sim.data.qpos[0]
+        delta_x = xpos_after - xpos_before
+        xpos_before = xpos_after
 
-        # Access MuJoCo sim directly
-        sim = env.wrapped_env.sim
-
-        # Joint positions for all wheels
-        wheel_pos = {
-            name: sim.data.qpos[sim.model.get_joint_qpos_addr(name)]
-            for name in ["wheel_fl_joint", "wheel_fr_joint", "wheel_rl_joint", "wheel_rr_joint"]
-        }
-
-        # Base/root body position (x, y, z)
-        rover_pos = sim.data.qpos[0:3]
-
-        print(f"\nStep {step + 1}")
-        print("  Action:", np.round(action, 3))
-        print("  Wheel positions:", {k: round(v, 4) for k, v in wheel_pos.items()})
-        print("  Rover position:", np.round(rover_pos, 4))
-        print("  Reward:", round(reward, 4))
+        print(f"Step {step+1}:")
+        print(f"  Action: {np.round(action, 3)}")
+        print(f"  Δx: {delta_x:.4f}")
+        print(f"  Reward: {reward:.4f}")
+        print(f"  Done: {done}")
+        print("-" * 40)
 
         if done:
-            print("Episode ended early.")
-            break
-
-    env.close()
+            print("Episode ended early, resetting environment...")
+            obs = env.reset()
+            xpos_before = sim.data.qpos[0]
 
 if __name__ == "__main__":
     main()
