@@ -10,7 +10,7 @@ from learning_to_adapt.envs import *
 import json
 import os
 
-EXP_NAME = 'mb_mpc'
+EXP_NAME = 'baseline'
 
 
 def run_experiment(config):
@@ -68,38 +68,38 @@ def run_experiment(config):
 if __name__ == '__main__':
     # -------------------- Define Variants -----------------------------------
 
+
     config = {
-            # Environment
-            'env': RoverEnv,
-            'task': None,
+        # Environment
+        'env': RoverEnv,
+        'task': None,
 
-            # Policy
-            'n_candidates': 2000,
-            'horizon': 20,
-            'use_cem': False,
-            'num_cem_iters': 5,
-            'discount': 1.,
+        # Policy
+        'n_candidates': 100,        # fewer planning candidates
+        'horizon': 5,                # shorter planning horizon
+        'use_cem': False,
+        'num_cem_iters': 1,          # minimal CEM iterations
+        'discount': 1.,
 
-            # Sampling
-            'max_path_length': 100,
-            'num_rollouts': 10,
-            'initial_random_samples': True,
+        # Sampling
+        'max_path_length': 10,       # much shorter episode length
+        'num_rollouts': 1,           # minimal rollouts
+        'initial_random_samples': True,
 
-            # Training
-            'n_itr': 50,
-            'learning_rate': 1e-3,
-            'batch_size': 128,
-            'dynamic_model_epochs': 100,
-            'valid_split_ratio': 0.1,
-            'rolling_average_persitency': 0.99,
+        # Training
+        'n_itr': 1,                  # only 1 iteration
+        'learning_rate': 1e-3,
+        'batch_size': 16,            # small batch size
+        'dynamic_model_epochs': 1,   # minimal training epochs
+        'valid_split_ratio': 0.1,
+        'rolling_average_persitency': 0.99,
 
-            # Dynamics Model
-            'hidden_sizes': (512, 512),
-            'hidden_nonlinearity': 'relu',
+        # Dynamics Model
+        'hidden_sizes': (16, 16),    # tiny network for speed
+        'hidden_nonlinearity': 'relu',
 
-
-            #  Other
-            'n_parallel': 2,
-            }
+        # Other
+        'n_parallel': 1,             # single worker
+    }
 
     run_experiment(config)
